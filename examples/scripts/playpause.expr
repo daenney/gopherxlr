@@ -1,0 +1,5 @@
+let mixer = "MIXER_ID";
+let fader = "A";
+let oldState = status.Old.Mixers[mixer].FaderStatus[fader].MuteState;
+let newState = status.New.Mixers[mixer].FaderStatus[fader].MuteState;
+oldState != newState ? PlayPause("spotify") : nil

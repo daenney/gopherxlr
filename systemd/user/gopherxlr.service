@@ -1,0 +1,23 @@
+[Unit]
+Description=GopherXLR
+StartLimitBurst=5
+StartLimitIntervalSec=15
+ConditionPathExists=/tmp/goxlr.socket
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/gopherxlr --scripts-dir %h/.config/gopherxlr
+
+Restart=always
+RestartSec=5
+
+LockPersonality=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+PrivateDevices=true
+ProtectHome=read-only
+ProtectSystem=strict
+ProtectProc=invisible
+
+[Install]
+WantedBy=default.target
