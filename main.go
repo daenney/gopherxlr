@@ -71,9 +71,12 @@ Main:
 				Context:      ctx,
 			}
 			for _, prog := range programs {
-				_, err := expr.Run(prog, env)
+				output, err := expr.Run(prog.prog, env)
 				if err != nil {
-					fmt.Println("error: ", err)
+					fmt.Printf("error executing %s: %s\n", prog.file, err)
+				}
+				if output != nil {
+					fmt.Printf("error from %s: %s\n", prog.file, output)
 				}
 			}
 		}

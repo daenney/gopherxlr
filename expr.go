@@ -22,8 +22,22 @@ func (Env) PlayPause(ctx context.Context, name string) error {
 	return dbus.ToggleMediaPlayback(ctx, name)
 }
 
-func LoadPrograms(dir string) ([]*vm.Program, error) {
-	res := []*vm.Program{}
+func (Env) RunCommand(ctx context.Context, name string, args ...string) error {
+	_, err := RunCommand(ctx, name, args...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type Program struct {
+	file string
+	prog *vm.Program
+}
+
+func LoadPrograms(dir string) ([]Program, error) {
+	res := []Program{}
+
 	err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -37,7 +51,7 @@ func LoadPrograms(dir string) ([]*vm.Program, error) {
 			if err != nil {
 				return err
 			}
-			res = append(res, prog)
+			res = append(res, Program{file: path, prog: prog})
 		}
 		return nil
 	})
