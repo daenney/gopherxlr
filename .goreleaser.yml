@@ -1,0 +1,25 @@
+builds:
+  - id: daemon
+    binary: gopherxlr
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -trimpath
+    ldflags:
+      - -s
+      - -w
+      - -X main.version={{.Version}} -X main.commit={{.FullCommit}} -X main.date={{.CommitDate}}
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+archives:
+  - id: daemon
+    builds:
+      - daemon
+    wrap_in_directory: true
+    files:
+      - LICENSE
+      - README.md
+      - examples/*
+      - systemd/*
