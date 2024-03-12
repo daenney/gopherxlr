@@ -12,9 +12,29 @@ import (
 	"github.com/expr-lang/expr"
 )
 
+var (
+	version = "unknown"
+	commit  = "unknown"
+	date    = "unknown"
+)
+
 func main() {
 	scripts := flag.String("scripts-dir", "", "path to load .expr scripts from")
+	showVersion := flag.Bool("version", false, "print version and exit")
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "Parameters:\n\n")
+		flag.PrintDefaults()
+		fmt.Fprintf(flag.CommandLine.Output(), "\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "Version: %s, Commit: %s, Date: %s\n", version, commit, date)
+		fmt.Fprintf(flag.CommandLine.Output(), "\n")
+	}
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Fprintf(os.Stdout, "Version: %s, Commit: %s, Date: %s\n", version, commit, date)
+		os.Exit(0)
+	}
 
 	if *scripts == "" {
 		fmt.Println("please provide a directory to load scripts from")
