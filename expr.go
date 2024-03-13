@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"code.dny.dev/gopherxlr/dbus"
 	"code.dny.dev/gopherxlr/websocket"
@@ -63,10 +64,35 @@ func LoadPrograms(dir string) ([]Program, error) {
 
 type patcher struct{}
 
+// Until https://github.com/expr-lang/expr/pull/602 is merged
 func (patcher) Visit(node *ast.Node) {
-	callNode, ok := (*node).(*ast.CallNode)
-	if !ok {
-		return
+	switch call := (*node).(type) {
+	case *ast.CallNode:
+		fn := call.Callee.Type()
+		if fn == nil {
+			return
+		}
+		if fn.Kind() != reflect.Func {
+			return
+		}
+		switch fn.NumIn() {
+		case 0:
+			return
+		case 1:
+			if fn.In(0).String() != "context.Context" {
+				return
+			}
+		default:
+			if fn.In(0).String() != "context.Context" &&
+				fn.In(1).String() != "context.Context" {
+				return
+			}
+		}
+		ast.Patch(node, &ast.CallNode{
+			Callee: call.Callee,
+			Arguments: append([]ast.Node{
+				&ast.IdentifierNode{Value: "ctx"},
+			}, call.Arguments...),
+		})
 	}
-	callNode.Arguments = append([]ast.Node{&ast.IdentifierNode{Value: "ctx"}}, callNode.Arguments...)
 }
