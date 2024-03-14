@@ -24,6 +24,8 @@ These are the functions you can call from your scripts:
 | PlayPause[^1]  | player name | `PlayPause("spotify")` | Toggle music play/pause |
 | RunCommand | command     | `RunCommand("notify-send", "title", "body")` | Execute arbitrary command |
 
+`RunCommand` is constrained to run up to 1s, after which the context will be cancelled. This ensures we don't have hanging commands.
+
 [^1]: `PlayPause` uses the D-Bus user session and as such only works on Linux
 
 ## Running
