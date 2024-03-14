@@ -2,7 +2,7 @@
 Description=GopherXLR
 StartLimitBurst=5
 StartLimitIntervalSec=15
-ConditionPathExists=/tmp/goxlr.socket
+After=app-goxlr\x2ddaemon@autostart.service
 
 [Service]
 Type=simple

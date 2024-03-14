@@ -32,4 +32,6 @@ A systemd unit file is included. You can install this in `$HOME/.config/systemd/
 
 If you also `systemctl --user enable` it, it'll start automatically when you login.
 
+The unit file has an `After=` on `app-goxlr\x2ddaemon@autostart.service`, which is automatically created by the `systemd-xdg-autostart-generator` user generator. This should ensure it's not started too early, and not started at all if goxlr-daemon isn't set to autostart.
+
 The unit file expects to find the binary in `$HOME/.local/bin` and the scripts in `$HOME/.config/gopherxlr`. You can adjust the paths in the unit file.
