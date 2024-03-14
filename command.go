@@ -11,7 +11,7 @@ import (
 //
 // Commands are given 1s to complete.
 func RunCommand(ctx context.Context, name string, args ...string) (string, error) {
-	cctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	cctx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 
 	cmd := exec.CommandContext(cctx, name, args...)
