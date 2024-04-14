@@ -22,6 +22,7 @@ const (
 // It only represents the part of the response necessary
 // to construct the HTTP API address.
 type DaemonStatus struct {
+	Error  string `json:"Error"`
 	Status struct {
 		Config struct {
 			HTTPSettings struct {
@@ -78,13 +79,6 @@ func PackRequest(msg json.RawMessage) ([]byte, error) {
 }
 
 // UnpackResponse will read a response from the Reader.
-//
-// Beware that this can hang indefinitely if you pass
-// a net.Conn and the command you sent is unknown to
-// the daemon. It won't respond with an error message,
-// it simply doesn't respond at all. Make sure to manage
-// the net.Conn.ReadDeadline so that a read will
-// eventually time out.
 func UnpackResponse(r io.Reader) (json.RawMessage, error) {
 	// payload length is encoded as a 4-byte uint32 in BigEndian
 	len := make([]byte, 4)
@@ -140,9 +134,13 @@ func MustGetAddress(ctx context.Context) string {
 		panic(err)
 	}
 
+	if status.Error != "" {
+		panic((status.Error))
+	}
+
 	addr, enabled := status.GetAddress()
 	if !enabled {
-		panic("not enabled")
+		panic("GoXLR HTTP API is not enabled")
 	}
 
 	return addr
