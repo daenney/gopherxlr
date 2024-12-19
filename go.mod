@@ -4,9 +4,9 @@ go 1.22.0
 
 require (
 	github.com/evanphx/json-patch/v5 v5.9.0
-	github.com/expr-lang/expr v1.16.5
+	github.com/expr-lang/expr v1.16.9
 	github.com/godbus/dbus/v5 v5.1.0
-	golang.org/x/net v0.24.0
+	golang.org/x/net v0.33.0
 )
 
 require github.com/pkg/errors v0.9.1 // indirect
